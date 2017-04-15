@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Microsoft Office";
+    Layout = "_ModuleLayout.cshtml";
+    ViewBag.SettingsLink = Request.Url.GetLeftPart(UriPartial.Authority) + "/Manage/Office";
+    ViewBag.Module = "OfficeModule";
+}
+
+@model Drupal.ParentPortal.Models.OfficeViewModel
+
+@if (Model.ConfigItem != null && !String.IsNullOrEmpty(Model.ConfigItem.Value))
+{
+    <iframe src="@Model.ConfigItem.Value" id="officeProIFrame"  height="600" style="border: 0px; width: 100%;">
+        Your browser does not support iframes.
+    </iframe>
+
+    @*<a href="@Model.ConfigItem.Value" target="_blank">@Model.ConfigItem.Value</a>*@
+}
+else
+{
+    <iframe src="http://office365download.com" height="600" style="border: 0px; width: 100%;">
+        Your browser does not support iframes.
+    </iframe>
+}

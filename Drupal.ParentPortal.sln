@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drupal.ParentPortal", "Drupal.ParentPortal\Drupal.ParentPortal.csproj", "{DDEF3AFF-0994-4FA4-89F5-464B9E51254A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drupal.ParentPortal.Models", "Drupal.ParentPortal.Models\Drupal.ParentPortal.Models.csproj", "{CA0C0637-D55C-47DA-A73D-8D693507B17A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drupal.ParentPortal.Repository", "Drupal.ParentPortal.Repository\Drupal.ParentPortal.Repository.csproj", "{0D817659-D251-4B4C-8585-F7CCF361D088}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Support", "Support", "{93BD8D35-C14A-4182-9D5D-3628983FE055}"
+	ProjectSection(SolutionItems) = preProject
+		AzureServicesBuilder.ps1 = AzureServicesBuilder.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDEF3AFF-0994-4FA4-89F5-464B9E51254A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDEF3AFF-0994-4FA4-89F5-464B9E51254A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDEF3AFF-0994-4FA4-89F5-464B9E51254A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDEF3AFF-0994-4FA4-89F5-464B9E51254A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA0C0637-D55C-47DA-A73D-8D693507B17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA0C0637-D55C-47DA-A73D-8D693507B17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA0C0637-D55C-47DA-A73D-8D693507B17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA0C0637-D55C-47DA-A73D-8D693507B17A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D817659-D251-4B4C-8585-F7CCF361D088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D817659-D251-4B4C-8585-F7CCF361D088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D817659-D251-4B4C-8585-F7CCF361D088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D817659-D251-4B4C-8585-F7CCF361D088}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.go-planet.com/tfs/slge
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Drupal.ParentPortal\\Drupal.ParentPortal.csproj
+		SccProjectName1 = Drupal.ParentPortal
+		SccLocalPath1 = Drupal.ParentPortal
+		SccProjectUniqueName2 = Drupal.ParentPortal.Models\\Drupal.ParentPortal.Models.csproj
+		SccProjectName2 = Drupal.ParentPortal.Models
+		SccLocalPath2 = Drupal.ParentPortal.Models
+		SccProjectUniqueName3 = Drupal.ParentPortal.Repository\\Drupal.ParentPortal.Repository.csproj
+		SccProjectName3 = Drupal.ParentPortal.Repository
+		SccLocalPath3 = Drupal.ParentPortal.Repository
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Modules";
+}
+<h2>Modules</h2>
+<h3>Manage</h3>
+<ul>
+    <li>@Html.ActionLink("Documents", "Documents", "Manage")</li>
+    <li>@Html.ActionLink("Events", "Events", "Manage")</li>
+    <li>@Html.ActionLink("Office", "Office", "Manage")</li>
+    <li>@Html.ActionLink("My Students", "MyStudents", "Manage")</li>
+</ul>
+@*<h3>Launch a Module</h3>
+<ul>
+    <li>@Html.ActionLink("Events Module ", "Event", "Modules", new { clientid = @Drupal.ParentPortal.Repository.AppManagement.Get().ClientId, secret = @Drupal.ParentPortal.Repository.AppManagement.Get().Secret, userid = @ViewBag.UserId }, new { target = "_blank" })</li>
+    <li>@Html.ActionLink("Documents Module ", "Document", "Modules", new { clientid = @Drupal.ParentPortal.Repository.AppManagement.Get().ClientId, secret = @Drupal.ParentPortal.Repository.AppManagement.Get().Secret, userid = @ViewBag.UserId }, new { target = "_blank" })</li>
+    <li>@Html.ActionLink("Office Module ", "Office", "Modules", new { clientid = @Drupal.ParentPortal.Repository.AppManagement.Get().ClientId, secret = @Drupal.ParentPortal.Repository.AppManagement.Get().Secret }, new { target = "_blank" })</li>
+    <li>@Html.ActionLink("My Students Module ", "MyStudents", "Modules", new { clientid = @Drupal.ParentPortal.Repository.AppManagement.Get().ClientId, secret = @Drupal.ParentPortal.Repository.AppManagement.Get().Secret, userid = @ViewBag.UserId }, new { target = "_blank" })</li>
+</ul>*@

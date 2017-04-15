@@ -1,0 +1,70 @@
+msdpp.get_events:
+  path: '/modules/getevents'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::getevents'
+  requirements:
+    _permission: 'access content'
+
+msdpp.get_isuservolunteer:
+  path: '/modules/isuservolunteer'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::isuservolunteer'
+  requirements:
+    _permission: 'access content'
+  
+msdpp.post_addvolunteer:
+  path: '/modules/addvolunteer'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::addvolunteer'
+  requirements:
+    _permission: 'access content'
+
+msdpp.post_unvolunteer:
+  path: '/modules/unvolunteer'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::unvolunteer'
+  requirements:
+    _permission: 'access content'
+
+msdpp.get_adminurl:
+  path: '/modules/adminurl'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::adminurl'
+  requirements:
+    _permission: 'access content'
+
+msdpp.get_download:
+  path: '/modules/download'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::download'
+
+  requirements:
+    _permission: 'access content'
+
+msdpp.get_getdocumentcount:
+  path: '/modules/getdocumentcount'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::getdocumentcount'
+  requirements:
+    _permission: 'access content'
+
+msdpp.get_getdocuments:
+  path: '/modules/getdocuments'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::getdocuments'
+  requirements:
+    _permission: 'access content'
+
+msdpp.post_savestudent:
+  path: '/modules/savestudent'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::savestudent'
+  requirements:
+    _permission: 'access content'
+
+msdpp.post_removestudent:
+  path: '/modules/removestudent'
+  defaults:
+    _controller: '\Drupal\msdpp\Controller\MsdppController::removestudent'
+  requirements:
+    _permission: 'access content'

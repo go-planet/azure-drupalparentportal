@@ -1,0 +1,141 @@
+﻿@model Drupal.ParentPortal.Models.MyStudentsViewModel
+
+@{
+    ViewBag.Title = "My Students";
+    Layout = "~/Views/Modules/_ModuleLayout.cshtml";
+    ViewBag.SettingsLink = Request.Url.GetLeftPart(UriPartial.Authority) + "/Manage/MyStudents";
+    ViewBag.Module = "MyStudentsModule";
+}
+<div id="viewContent">
+    <div class="panel panel-default" role="document">
+        <div id="myStudentsTable">
+            @{ Html.RenderPartial("_MyStudents", Model.MyStudents); }
+        </div>
+        <!-- Modal Dialog - New Student -->
+        <div class="modal fade" id="newStudentModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    @using (Ajax.BeginForm("SaveStudent", "Modules", new AjaxOptions()
+                    {
+                        HttpMethod = "POST",
+                        Url = Url.Action("SaveStudent", "Modules"),
+                        OnSuccess = "SaveStudentSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#newStudentModal', '#btnSaveStudent')",
+                        OnFailure = "SaveStudentFailed(data)",
+                        //UpdateTargetId = "myStudentsTable"//"AjaxAlerts.onFailure(xhr, status, error, '#btnSaveStudent')",
+                        OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSaveStudent');$('#frmStudent').find('input, textarea, select').attr('disabled', true);"
+                    }, new { id = "frmStudent" }))
+                    {
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="msdpp.modules.cancelAddStudent();">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="eventDetailsModalLabel">Student Information </h4>
+                        </div>
+                        <div class="modal-body" style="margin-right:15px; margin-left:15px;">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="row ">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.StudentsSchoolId, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.StudentsSchoolId, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.StudentsSchoolId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.FirstName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.FirstName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.LastName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.LastName, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.School, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.School, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.School, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.Teacher, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.Teacher, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.Teacher, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.GradeLevel, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(model => model.NewStudent.GradeLevel, Model.Grades, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.GradeLevel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NewStudent.DoB, htmlAttributes: new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.NewStudent.DoB, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NewStudent.DoB, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-success" id="saveSucceededAlert" style="display:none;"> The student was added successfully. This page will now automatically refresh. </div>
+                                        <div class="alert alert-danger" id="saveFailedAlert" style="display:none;"> There was an error adding the student. Please review your submission and try again. </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-ok" id="btnSaveStudent">Save</button>
+                                <button type="button" class="btn btn-default" id="btnCancelAddStudent" onclick="msdpp.modules.cancelAddStudent();">Cancel</button>
+                            </div>
+                            @Html.Partial("_LoadingPartial", new ViewDataDictionary { { "Module", "AddStudentForm" } })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+        <div>
+            <div class="alert alert-success" id="removeSucceededAlert" style="display:none;"> The student was removed successfully. This page will now automatically refresh. </div>
+            <div class="alert alert-danger" id="removeFailedAlert" style="display:none;"> There was an error removing the student. You may need to reload the page and try again. </div>
+            <button value="" class="app-btn" id="NewStudentbutton">Add Student</button>
+        </div>
+        <!-- Modal Dialog - Confirm Remove Student -->
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm" style="top:40%;outline: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" onclick="msdpp.modules.cancelDelete();" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">Remove <span id="removeStudentName"></span>?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>This action cannot be undone.</p>
+                        <p>Do you want to proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-ok" onclick="msdpp.modules.removeStudent();" id="proceedBtn" data-id="">Proceed</button>
+                        <button type="button" class="btn btn-default" onclick="msdpp.modules.cancelDelete();">Cancel</button>
+                    </div>
+                </div>
+                @Html.Partial("_LoadingPartial", new ViewDataDictionary { { "Module", "RemoveStudentConfirmation" } })
+            </div>
+        </div>
+
+</div>
+
+

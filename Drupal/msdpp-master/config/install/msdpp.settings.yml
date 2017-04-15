@@ -1,0 +1,4 @@
+azure:
+  clientid: 'enter your clientid'
+  secret: 'enter your secret'
+  uri: 'enter your azure web endpoint'

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Drupal.ParentPortal.Models.Student>
+
+<div class="container">
+    @if (Model.Count() > 0)
+    {
+    <table class="table table-hover">
+        <thead>
+            <tr class="row">
+                <td class="col-md-3">Name</td>
+                <td class="col-md-2 hidden-xs">Grade</td>
+                <td class="col-md-3 hidden-xs rhd">Teacher</td>
+                <td class="col-md-3 hidden-xs rhd">School</td>
+                <td class="col-md-1 text-center">Remove</td>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr id="@("studentid" + item.StudentId)" class="row" >
+                <td class="col-md-3"><div data-toggle="tooltip" data-trigger="click" data-html="true" title="@Html.DisplayFor(modelItem => item.GradeLevel), @Html.DisplayFor(modelItem => item.Teacher), @Html.DisplayFor(modelItem => item.School)">@Html.DisplayFor(modelItem => item.FirstName, new { htmlAttributes = new { @class = "" } }) @Html.DisplayFor(modelItem => item.LastName, new { htmlAttributes = new { @class = "" } })</div></td>
+                <td class="col-md-2 hidden-xs">@Html.DisplayFor(modelItem => item.GradeLevel, new { htmlAttributes = new { @class = "" } })</td>
+                <td class="col-md-3 hidden-xs rhd">@Html.DisplayFor(modelItem => item.Teacher, new { htmlAttributes = new { @class = "" } })</td>
+                <td class="col-md-3 hidden-xs rhd">@Html.DisplayFor(modelItem => item.School, new { htmlAttributes = new { @class = "" } })</td>
+                <td class="col-md-1 text-center"><button class="RemoveStudentButton btn-group-xs" data-id="@item.StudentId" data-name="@item.FirstName @item.LastName"><div class="btn trash" aria-hidden="true">&nbsp;</div></button></td>
+            </tr>
+        }
+
+    </table>
+    }
+    else
+    {
+        <div class="text-warning">Add a student to see information targeted to their teacher, grade or school.</div>
+    }
+</div>

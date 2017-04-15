@@ -1,0 +1,130 @@
+﻿@{
+    Layout = "_AdminLayout.cshtml";
+}
+@model Drupal.ParentPortal.Models.AppManagement
+
+@{
+    ViewBag.Title = "Application Settings";
+}
+
+@*<h2>Application Settings</h2>*@
+@using (Ajax.BeginForm("Edit", "Admin", new AjaxOptions()
+{
+    HttpMethod = "POST",
+    Url = Url.Action("Edit", "Admin"),
+    OnSuccess = "SaveSucceeded(data)",
+    OnFailure = "SaveFailed()",
+    OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSave')",
+    OnComplete = "AjaxAlerts.onComplete"
+}))
+{ 
+@*@using (Html.BeginForm())*@
+    //{
+    @Html.HiddenFor(model => model.AppManagementId)
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClientId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" title="Generate Client Id" onclick="returnGuid('@Html.IdFor(m => m.ClientId)');">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                            </span>
+                        </button>
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Secret, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.EditorFor(model => model.Secret, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" title="Generate Secret" onclick="stringItUp('@Html.IdFor(m => m.Secret)');">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">
+                            </span>
+                        </button>
+                    </span>
+                </div>
+                @Html.ValidationMessageFor(model => model.Secret, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.RemoteUri, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.RemoteUri, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.RemoteUri, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            <div class="col-md-9 pull-left">
+                <div class="alert alert-success alert-dismissible pull-right" role="alert" id="saveSucceededAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                    <button type="button" class="close" onclick="javascript:$('#saveSucceededAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Success!</strong> Settings were saved.
+                </div>
+                <div class="alert alert-danger alert-dismissible pull-right" role="alert" id="saveFailedAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                    <button type="button" class="close" onclick="javascript:$('#saveFailedAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Failed!</strong> Your changes were not saved. Please try again.
+                </div>
+            </div>
+            <div class="col-md-3 pull-right">
+                <button type="submit" class="btn btn-primary btn-ok" id="btnSave" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function returnGuid(c)
+    {
+        jQuery.when(
+            GetGuid('@Url.Action("GetGuid", "Toolbox")', true)).then(
+                function (data) {
+                    $('#' + c).val(data);
+                });
+    }
+
+    function stringItUp(c){
+        var s = GetRandomString(8);
+        $('#'+c).val(s);
+    }
+    function SaveSucceeded(data) {
+        if (data.Success) {
+            $("#btnSave").button('reset');
+            $("#saveSucceededAlert").show();
+            $("#saveSucceededAlert").alert();
+            $("#saveSucceededAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveSucceededAlert").slideUp(500);
+            });
+        } else {
+            $("#btnSave").button('reset');
+            $("#saveFailedAlert").show();
+            $("#saveFailedAlert").alert();
+            $("#saveFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveFailedAlert").slideUp(500);
+            });
+        }
+    }
+    function SaveFailed(data) {
+        if (!data.Success) {
+            $("#btnSave").button('reset');
+            $("#saveFailedAlert").show();
+            $("#saveFailedAlert").alert();
+            $("#saveFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveFailedAlert").slideUp(500);
+            });
+        }
+
+    }
+</script>

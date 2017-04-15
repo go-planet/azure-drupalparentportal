@@ -1,0 +1,180 @@
+﻿@{
+    Layout = "_ModuleLayout.cshtml";
+}
+
+@model Drupal.ParentPortal.Models.EventViewModel
+
+@{
+    ViewBag.Title = "Events";
+    ViewBag.SettingsLink = Request.Url.GetLeftPart(UriPartial.Authority) + "/Manage/Events";
+    ViewBag.Module = "EventsModule";
+
+}
+
+<div style="position: relative;">
+    <div class="calendar-container">
+        <div id='calendar'></div>
+    </div>
+</div>
+    <hr />
+
+    <div class="alert-info alert calendar-upcoming">
+        @if ((Model.UpcomingVolunteerEvents != null) && (Model.UpcomingVolunteerEvents.Count > 0))
+        {
+            <table class="table table-bordered table-hover">
+                <caption><div class="panel-title">Over the next two weeks you are scheduled to volunteer for these events:</div></caption>
+                <thead class="">
+                    <tr>
+                        <td class="">Date &amp; Time</td>
+                        <td class="col-md-5">Event Name</td>
+                        <td class="col-md-2">Location</td>
+                        <td class="col-md-2">Need to Cancel?</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Drupal.ParentPortal.Models.EventVolunteer ev in Model.UpcomingVolunteerEvents)
+                {
+                        <tr class="">
+                            <td class="col-md-3">@ev.SchoolEvent.Start.Value.ToUniversalTime().ToString("M/d/yyyy hh:mm tt")</td>
+                            <td class="col-md-5">@ev.SchoolEvent.Title</td>
+                            <td class="col-md-2">@ev.SchoolEvent.Location</td>
+                            <td class="col-md-2"><div class=""><a href="#" class="app-btn cancelVolunteer" style="padding:0px;" data-id="@ev.SchoolEventId">Cancel</a></div></td>
+                        </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>You have not volunteered for any events in the next two weeks.</div>
+        }
+    </div>
+<!-- Modal Dialog -->
+<div class="modal fade VolunteerForm" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+@using (Html.BeginForm("addvolunteer", "Modules", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    id = "frmVolunteer"
+}))
+{
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title calendar-modaltitle" id="eventDetailsModalLabel">Event Information</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3"><label class="control-label">Starts</label></div><div class="col-md-9 calendar-modalstart"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label class="control-label">Ends</label></div><div class="col-md-9 calendar-modalend"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label class="control-label">Location</label></div><div class="col-md-9 calendar-modallocation"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><label class="control-label">Description</label></div><div class="col-md-9 calendar-modaldescription"></div>
+                </div>
+                <div class="row" style="display:none !important;">
+                    <div class="col-md-3"><label class="control-label">Contact</label></div><div class="col-md-9 calendar-modaldprimarycontactsemail"><a id="emailContact" href=""></a></div>
+                </div>
+                <div class="row" style="display:none !important;">
+                    <div class="col-md-3"></div><div class="col-md-9">
+                        <a id="ActionBtn" href="" target="_blank"></a>
+                    </div>
+                </div>
+                <div class="row" id="Volunteer" style="display:none !important;">
+                    <div class="col-md-3"></div><div class="col-md-9"><input type="checkbox" id="volunteerCheck"/> I would like to volunteer</div>
+                </div>
+                <div style="position: relative;">
+                    @*<div class="loader" id="volunteerloader"></div>*@
+                    <div class="form-horizontal" id="VolunteerForm" style="display:none !important;">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.FirstName, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.FirstName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.LastName, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.LastName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.Phone, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.Phone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.StreetAddress, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.StreetAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.StreetAddress, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.City, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.City, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.City, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.State, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.State, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.State, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.VolunteerInfo.ZIPCode, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.VolunteerInfo.ZIPCode, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.VolunteerInfo.ZIPCode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12" style="text-align:center">
+                                <button type="button" id="VolunteerSubmit" class="btn btn-primary btn-ok">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.Partial("_LoadingPartial", new ViewDataDictionary { { "Module", "VolunteerForm" } })
+                </div>
+                <div class="alert alert-success alert-dismissible" role="alert" id="volunteeredAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                    <div class="status"> </div>
+                </div>
+                <div class="calendar-cancel" style="display:none !important;"><button type="button" class="app-btn" data-id="@Model.VolunteerInfo.SchoolEventId" id="UnvolunteerButton" >I need to cancel</button></div>
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="app-btn" data-dismiss="modal" id="CloseButton">Close</button>
+                <span class="calendar-modalid" style="visibility:hidden"></span>
+            </div>
+            
+}
+        </div>
+    </div>
+</div>
+
+

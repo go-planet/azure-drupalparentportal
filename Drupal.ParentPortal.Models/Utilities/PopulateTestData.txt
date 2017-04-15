@@ -1,0 +1,26 @@
+﻿USE [drupaltest]
+GO
+SET IDENTITY_INSERT [dbo].[AppManagement] ON 
+
+GO
+INSERT [dbo].[AppManagement] ([AppManagementId], [ClientId], [Secret]) VALUES (1, N'f2406771-8d6f-4f72-a01f-269abf69b9ba', N'5516156')
+GO
+SET IDENTITY_INSERT [dbo].[AppManagement] OFF
+GO
+SET IDENTITY_INSERT [dbo].[ConfigurationItem] ON 
+
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (1, N'Office', N'OfficeURL', N'https://officeproplus.planetdemolab.com/?nochrome=true&NoChrome=true', 0)
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (2, N'Events', N'SmtpServer', N'smtp.sendgrid.net', 0)
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (3, N'Events', N'SmtpLoginUser', N'azure_a6adc1690ca604dcd5cfcf13cf82f3fc@azure.com', 0)
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (4, N'Events', N'SmtpLoginPassword', N'DBsA2cEyBGfu15F', 0)
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (5, N'Events', N'SendFromEmailAddress', N'sharepoint@planetdemolab.com', 0)
+GO
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (6, N'MyStudents', N'StudentValidationWebService', N'https://drupaltest20161118091853.azurewebsites.net/Modules/VerifyStudent', 0)
+GO
+SET IDENTITY_INSERT [dbo].[ConfigurationItem] OFF
+GO

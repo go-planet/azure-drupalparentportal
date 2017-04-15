@@ -1,0 +1,374 @@
+﻿@model Drupal.ParentPortal.Models.ManageEventViewModel
+
+@{
+    ViewBag.Title = "Event Details";
+}
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        @using (Ajax.BeginForm("EventDetails", "Manage", new AjaxOptions()
+        {
+            HttpMethod = "POST",
+            Url = Url.Action("SaveEvent", "Manage"),
+            OnSuccess = "SaveSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#eventDetailsModal', '#btnSave')",
+            OnFailure = "SaveFailed(data)",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+            OnBegin = "return ValidateDates()",
+            OnComplete = "AjaxAlerts.onComplete"
+            //LoadingElementId = "LoadingElement"
+        }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title calendar-modaltitle" id="eventDetailsModalLabel">Event Information </h4>
+            </div>
+            <div class="modal-body">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.SchoolEvent.SchoolEventId)
+                @Html.HiddenFor(model => model.SchoolEvent.RegisteredVolunteers)
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.Title, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.Start, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <div class='input-group date' id='datetimepickerStart'>
+                                @Html.EditorFor(model => model.SchoolEvent.Start,
+                                    new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @Value = Model.SchoolEvent.Start,
+                                            @class = "form-control"
+                                        }
+                                    })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.Start, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.End, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <div class='input-group date' id='datetimepickerEnd'>
+                                @Html.EditorFor(model => model.SchoolEvent.End,
+                                   new
+                                   {
+                                       htmlAttributes = new
+                                       {
+                                           @Value = Model.SchoolEvent.End,
+                                           @class = "form-control"
+                                       }
+                                   })
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.End, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.Location, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.Location, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.Location, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.Description, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.PrimaryContactsEmail, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.PrimaryContactsEmail, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.PrimaryContactsEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.IsVolunteerOpportunity, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.IsVolunteerOpportunity, new { htmlAttributes = new { @class = "" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.IsVolunteerOpportunity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.MaxVolunteers, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @if (Model.SchoolEvent.IsVolunteerOpportunity)
+                        {
+                            @Html.EditorFor(model => model.SchoolEvent.MaxVolunteers, new { htmlAttributes = new { @class = "form-control", @title = "Enter Zero for unlimited volunteers." } })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(model => model.SchoolEvent.MaxVolunteers, new { htmlAttributes = new { @class = "form-control", @title = "Enter Zero for unlimited volunteers.", @disabled = "disabled" } })
+                        }
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.MaxVolunteers, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.ActionButtonText, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.ActionButtonText, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.ActionButtonText, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.ActionLink, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.SchoolEvent.ActionLink, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.ActionLink, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.SchoolEvent.Audience.AudienceName, htmlAttributes: new { @class = "control-label " })
+                    </div>
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.SchoolEvent.AudienceId, Model.Audiences, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SchoolEvent.AudienceId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if (Model.SchoolEvent.SchoolEventId > 0)
+                {
+                    <button type="button" class="btn btn-warning" id="btnDelete" onclick="JavaScript: ConfirmDelete();">Delete</button>
+                }
+                @if ((Model.SchoolEvent.SchoolEventId > 0) && (Model.SchoolEvent.IsVolunteerOpportunity) && (Model.SchoolEvent.RegisteredVolunteers > 0))
+                {
+                    <button type="button" class="btn btn-primary btn-ok" id="btnUpdate" onclick="JavaScript: ConfirmUpdate();">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="CloseButton">Cancel</button>
+                    <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#volunteers">Show Volunteers</button>
+                    <div class="table-responsive collapse" id="volunteers" style="margin-top:10px;">
+                        <table class="table table-bordered table-hover" SUMMARY="This table lists all volunteers." style="padding-left: 4px;width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr><td colspan="5"><div><label class="label label-default">Total Volunteers | @Model.SchoolEvent.Volunteers.Count</label></div></td></tr>
+                            </tfoot>
+                            <tbody>
+
+                                @foreach (var v in Model.SchoolEvent.Volunteers)
+                                {
+                                    <tr>
+                                        <td class="text-left">@Html.DisplayFor(Model => v.FirstName) @Html.DisplayFor(Model => v.LastName)</td>
+                                        <td>@Html.DisplayFor(Model => v.Email)</td>
+                                        <td>@Html.DisplayFor(Model => v.Phone)</td>
+                                        <td class="text-left">@Html.DisplayFor(Model => v.StreetAddress) <br /> @Html.DisplayFor(Model => v.City)
+                                        @if (!string.IsNullOrEmpty(v.City)) {
+                                            <span>, </span>
+                                        }
+                                        @Html.DisplayFor(Model => v.State) @Html.DisplayFor(Model => v.ZIPCode)
+                                        </td>
+                                                            
+
+
+                                                                                                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                                                    else
+                                                    {
+                    <button type="submit" class="btn btn-primary btn-ok" id="btnSave">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="CloseButton">Cancel</button>
+                                            }
+            </div>
+            if (Model.SchoolEvent.SchoolEventId > 0)
+            {
+                <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" style="top:40%;outline: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" onclick="CancelDelete();" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="myModalLabel">Confirm, Delete Event?</h4>
+                            </div>
+                            <div class="modal-body">
+                                @if ((Model.SchoolEvent.IsVolunteerOpportunity) && (Model.SchoolEvent.RegisteredVolunteers > 0))
+                                {
+                                    <p>This action cannot be undone.</p>
+                                    <label class="control-label" for="NotifyVolunteers">Notify Volunteers?</label>
+                                    @Html.EditorFor(model => model.NotifyVolunteersDelete, new { htmlAttributes = new { @class = "" } })
+                                    <label class="control-label" for="CustomMessage">Enter an optional message to include in notice to volunteers:</label>
+                                    @Html.EditorFor(model => model.CustomMessageDelete, new { htmlAttributes = new { @class = "form-control" } })
+                                }
+                                <p>Do you want to proceed?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-ok" onclick="Delete();">Proceed</button>
+                                <button type="button" class="btn btn-default" onclick="CancelDelete();">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                if (Model.SchoolEvent.IsVolunteerOpportunity)
+                {
+                    <div class="modal fade" id="confirm-update" tabindex="-1" role="dialog" aria-labelledby="myModalUpdateLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm" style="top:40%;outline: none;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" onclick="CancelUpdate();" aria-hidden="true">×</button>
+                                    <h4 class="modal-title" id="myModalLabel">Notify Volunteers?</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="control-label" for="NotifyVolunteers">Notify Volunteers?</label>
+                                    @Html.EditorFor(model => model.NotifyVolunteersUpdate, new { htmlAttributes = new { @class = "" } })
+                                    <label class="control-label" for="CustomMessage">Enter an optional message to include in notice to volunteers:</label>
+                                    @Html.EditorFor(model => model.CustomMessageUpdate, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary btn-ok" id="btnUpdateProceed" >Proceed</button>
+                                    <button type="button" class="btn btn-default" onclick="CancelUpdate();">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }@*//end of form tag *@
+        <script type="text/javascript">
+            $(document).ready(function ($) {
+                $(function () {
+                    $.validator.unobtrusive.parse("form");
+
+
+                    $('#eventDetailsModal').on('shown.bs.modal', function () {
+                        $('#SchoolEvent_Title').focus();
+                    })
+                    $('#SchoolEvent_IsVolunteerOpportunity').on('click', function () {
+                        $('#SchoolEvent_MaxVolunteers').prop('disabled', $('#SchoolEvent_IsVolunteerOpportunity').is(':checked') ? false : true);
+                        //$('#SchoolEvent_MaxVolunteers').val("");
+                    })
+                    $('#datetimepickerStart').datetimepicker({
+                        showClose: true,
+                        showClear: true,
+                        toolbarPlacement: 'top',
+                        stepping: 15
+                    });
+                    $('#datetimepickerEnd').datetimepicker({
+                        showClose: true,
+                        showClear: true,
+                        toolbarPlacement: 'top',
+                        stepping: 15,
+                        useCurrent: false //Important! See issue #1075
+                    });
+                    //$("#datetimepickerStart").on("dp.change", function (e) {
+                    //    //if ($('#datetimepickerEnd').data("date") < $('#datetimepickerStart').data("date"))
+                    //    //{
+                    //    //    $('#datetimepickerEnd').data("date") = moment($('#datetimepickerStart').data("date")).add(moment.duration(1,'hours'));
+                    //    //}
+                    //    if (($("#SchoolEvent_Start").val()) && (!$("#SchoolEvent_End").val())) $("#SchoolEvent_End").val(moment(moment($("#SchoolEvent_Start").val()).add(moment.duration(1, 'hours'))).format("M/D/YYYY h:mm A"));
+                    //    $('#datetimepickerEnd').data("DateTimePicker").minDate(e.date);
+                    //});
+                    //$("#datetimepickerEnd").on("dp.change", function (e) {
+                    //    $('#datetimepickerStart').data("DateTimePicker").maxDate(e.date);
+                    //});
+                    //if ($('#datetimepickerStart').data("date")) $('#datetimepickerEnd').data("DateTimePicker").minDate($('#datetimepickerStart').data("date"));
+                    //if ($('#datetimepickerEnd').data("date")) $('#datetimepickerStart').data("DateTimePicker").maxDate($('#datetimepickerEnd').data("date"));
+
+                });
+            });
+            function SaveSucceeded(data) {
+                if (data.success) {
+                    $('#confirm-update').modal('hide');
+                    $('#eventDetailsModal').modal('hide');
+                    $('#btnUpdateProceed').prop('disabled', false);
+                    $('#calendar').fullCalendar('refetchEvents');
+                } else { console.log(data); }
+            }
+            function SaveFailed(data) {
+                $('#btnUpdateProceed').prop('disabled', false);
+                console.log(data);
+            }
+            function ConfirmDelete() {
+                $('#confirm-delete').modal('show');
+            }
+            function ConfirmUpdate() {
+                $('#confirm-update').modal('show');
+            }
+            function CancelUpdate() {
+                $('#confirm-update').modal('hide');
+            }
+            function Update() {
+                $('#btnUpdateProceed').prop('disabled', true);
+                //$('frmEvent').submit();
+            }
+            function CancelDelete() {
+                $('#confirm-delete').modal('hide');
+            }
+            function Delete() {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                var notify = $("#NotifyVolunteersDelete").val();
+                var customMessage = $("#CustomMessageDelete").val();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteEvent")',
+                    cache: false,
+                    //headers: { '__RequestVerificationToken': token },
+                    data: { __RequestVerificationToken: token, id: '@Model.SchoolEvent.SchoolEventId', notify: notify, customMessage: customMessage },
+                    success: function (viewHTML) {
+                        $('#confirm-delete').modal('hide');
+                        $('#eventDetailsModal').modal('hide');
+                        $('#calendar').fullCalendar('refetchEvents');
+                    },
+                    error: function (xhr) {
+                        //alert('ERROR: ' + xhr.statusText);
+                        console.log(xhr);
+                    },
+
+                }).done(function () {
+                    // do something after success/error ?
+                })
+            }
+            function BeginDelete() {
+            }
+            function ValidateDates() {
+                if ($('#SchoolEvent_Start').val() <= $('#SchoolEvent_End').val()) return true;
+                return false;
+            }
+
+        </script>

@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section header{
+    @*<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>*@
+    @*@Styles.Render("~/Content/css")*@
+    @*@Scripts.Render("~/bundles/modernizr")*@
+    @*@Scripts.Render("~/bundles/jquery")*@
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    @*<script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/modernizr-2.6.2.js")).ToString())"></script>*@
+    @*<script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery-1.10.2.min.js")).ToString())"></script>*@
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.validate.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.unobtrusive-ajax.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.validate.unobtrusive.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Libraries/FullCalendar/lib/moment.min.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/bootstrap.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/bootstrap-datetimepicker.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/respond.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Libraries/FullCalendar/fullcalendar.min.js")).ToString())"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery-ajax-alerts.min.js")).ToString())"></script>
+
+    <!-- Paging library -->
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.dataTables.min.js")).ToString())" type="text/javascript"></script>
+    <script src="@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/dataTables.bootstrap.min.js")).ToString())" type="text/javascript"></script>
+
+    <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/bootstrap.min.css")).ToString())" rel="stylesheet">
+    <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/bootstrap-datetimepicker.css")).ToString())" rel="stylesheet">
+    <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/font-awesome.min.css")).ToString())" rel="stylesheet">
+    <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/site.css")).ToString())" rel="stylesheet">
+    <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Libraries/FullCalendar/fullcalendar.min.css")).ToString())" rel="stylesheet">
+    
+    <!-- Paging library css -->
+     <link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/dataTables.bootstrap.min.css")).ToString())" rel="stylesheet">
+
+}
+    @*<div class="container body-content">*@
+        <div>
+            <h2>@ViewBag.Title</h2>
+            @*<div class="module-headerright"><h4><span class="glyphicon glyphicon-cog"></span></h4></div>*@
+            <div style="clear:both;"></div>
+        </div>
+        <hr />
+        @RenderBody()
+    @*</div>*@
+    @*@RenderSection("scripts", required: false)*@

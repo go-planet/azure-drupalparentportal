@@ -1,0 +1,120 @@
+﻿
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" /> <!-- Keep this for IFrame compatibility -->
+    <title>@ViewBag.Title</title>
+
+    <div class="container body-content module-content @ViewBag.Module" id="body-content">
+        
+        <div>
+            <div class="module-headerleft"><h4>@ViewBag.Title</h4></div>
+            <div class="module-headerright"><a href="@ViewBag.SettingsLink" target="_blank"><div class="cog"></div></a></div>
+            <div style="clear:both;"></div>
+        </div>
+        <hr />
+                @RenderBody()
+                @Html.Partial("_LoadingPartial", new ViewDataDictionary { { "Module", ViewBag.Module } })
+    </div>
+
+<script type="text/javascript">
+
+        hostUriPrefix = '@Html.Raw(Request.Url.GetLeftPart(UriPartial.Authority)).ToString()';
+
+        prepareDOMBeforeDynamicScripts();
+
+        addStyle("bootstrap-css-href", "@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/bootstrap.min.css")).ToString())");
+        addStyle("fontawesome-css-href", "@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/font-awesome.min.css")).ToString())");
+        addStyle("site-css-href", "@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/site.css")).ToString())");
+        addStyle("fullcalendar-css-href", "@Html.Raw(new Uri(Request.Url, Url.Content("~/Libraries/FullCalendar/fullcalendar.min.css")).ToString())");
+
+        // add jQuery; ensure it's loaded and then load the additional dependencies
+        
+       // addScript("jquery-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery-2.2.4.js")).ToString())", "window.jQuery", function () {
+        ensureScript("window.jQuery", function () {
+
+            prepareDOMAfterDynamicScripts();
+
+            addScript("bootstrap-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/bootstrap.js")).ToString())", "window.jQuery().modal", function () {
+                addScript("jqueryvalidate-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.validate.js")).ToString())", "window.jQuery.validator", function () {
+                    addScript("jqueryunobtrusiveajax-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.unobtrusive-ajax.js")).ToString())", "window.jQuery", function () {
+                        addScript("jqueryunobtrusivevalidate-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery.validate.unobtrusive.js")).ToString())", "jQuery.fn.alert", function () {
+                            //TODO: is this used? addScript("jqueryajaxalerts-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/jquery-ajax-alerts.min.js")).ToString())", "window.jQuery", function () {
+                                addScript("modernizr-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/modernizr-2.6.2.js")).ToString())", "window.jQuery", function () {
+                                    addScript("respond-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/respond.js")).ToString())", "window.jQuery", function () {
+                                        addScript("moment-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Libraries/FullCalendar/lib/moment.min.js")).ToString())", "window.moment", function () {
+                                            addScript("fullcalendar-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Libraries/FullCalendar/fullcalendar.js")).ToString())", "window.jQuery.fullCalendar", function () {
+                                                addScript("modules-js-href", "@Html.Raw(new Uri(Request.Url, Url.Content("/Scripts/Modules.js")).ToString())", "window.jQuery", function () {
+                                                    // document ready is wired up in modules.js
+                                                    
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                           // });
+                        });
+                    });
+                });
+            });
+        });
+
+        function ensureScript(script, method) {
+            if (eval(script))
+                method();
+            else
+                setTimeout(function () { ensureScript(script, method) }, 50);
+        }
+
+        function prepareDOMBeforeDynamicScripts()
+        {
+            var elems = document.getElementsByClassName("module-content");
+            Array.prototype.filter.call(elems, function(elem){
+                elem.style.visibility = "hidden";
+            });
+
+        }
+
+        function prepareDOMAfterDynamicScripts() {
+            var elems = document.getElementsByClassName("module-content");
+            Array.prototype.filter.call(elems, function (elem) {
+                elem.style.visibility = "visible";
+            });
+        }
+
+        function addStyle(id, uri)
+        {
+            var elem = document.getElementById(id);
+            if (!elem) {
+                var filename = uri;
+                var fileref = document.createElement("link");
+                fileref.setAttribute("href", filename);
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("id", id);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        }
+
+        function addScript(id, uri, namespace, method) {
+            var elem = document.getElementById(id, uri);
+            if (!elem) {
+                var filename = uri;
+                var fileref = document.createElement("script");
+                fileref.setAttribute("src", filename);
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("id", id);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+
+                if (method && namespace)
+                {
+                    ensureScript(namespace, method);
+                }
+
+            }
+        }
+
+</script>
+
+
+

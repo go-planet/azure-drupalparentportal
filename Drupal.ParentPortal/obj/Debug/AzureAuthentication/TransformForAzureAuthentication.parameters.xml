@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AD_ClientID" description="AD Client Application ID" defaultValue="1244d874-4f61-4ddc-8385-1912a527ca6d" tags="AD_ClientAPPID">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:ClientId']/@value" />
+  </parameter>
+  <parameter name="AD_ClientPassword" description="AD Client Password" defaultValue="nppZaDoyQRruR2bJVQ64KA5X8dyYTd4p6j9t6Gghhh0=" tags="AD_Password">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:ClientSecret']/@value" />
+  </parameter>
+  <parameter name="AD_TenantId" description="AD Tenant Id" defaultValue="9e0a5048-6d85-4462-a200-9a7451d5d541" tags="AD_TenantId">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:TenantId']/@value" />
+  </parameter>
+  <parameter name="AD_Domain" description="AD Domain" defaultValue="planetdemolaboutlook.onmicrosoft.com" tags="AD_Domain">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:Domain']/@value" />
+  </parameter>
+  <parameter name="AD_PostLogoutRedirectUri" description="AD PostLogoutRedirectUri" defaultValue="http://drupaltestapp.azurewebsites.net/" tags="AD_PostLogoutRedirectUri">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:PostLogoutRedirectUri']/@value" />
+  </parameter>
+</parameters>

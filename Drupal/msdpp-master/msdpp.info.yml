@@ -1,0 +1,6 @@
+name: Microsoft Drupal 8 Parent Portal Modules
+type: module
+description: 'Parent Portal Modules'
+package: Custom
+version: 8.x
+core: 8.x

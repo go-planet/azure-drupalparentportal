@@ -1,0 +1,19 @@
+﻿<meta charset="utf-8" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" /> <!-- Keep this for IFrame compatibility -->
+<title>@ViewBag.Title</title>
+
+<link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/bootstrap.min.css")).ToString())" rel="stylesheet">
+<link href="@Html.Raw(new Uri(Request.Url, Url.Content("~/Content/site.css")).ToString())" rel="stylesheet">
+
+<div class="container body-content module-content @ViewBag.Module" id="body-content">
+    
+    <div>
+        <div class="module-headerleft"><h4>@ViewBag.Title</h4></div>
+        <div class="module-headerright"></div>
+        <div style="clear:both;"></div>
+    </div>
+    <hr />
+            @RenderBody()
+</div>

@@ -1,0 +1,195 @@
+﻿@model Drupal.ParentPortal.Models.AlertManagement
+
+@{
+    ViewBag.Title = "Alert Manager";
+}
+
+<h2><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Manage Alerts</h2>
+
+<p>Paragraph to describe the alerts manager.</p>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <label class="control-label">Add alerts as an XML or JSON feed</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    @Html.EditorFor(model => model.AlertUri, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2 col-lg-2">
+                    @Html.LabelFor(model => model.LabelField, htmlAttributes: new { @class = "control-label" })
+                </div>
+                <div class="col-md-10 col-lg-10">
+                    @Html.EditorFor(model => model.LabelField, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LabelField, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2 col-lg-2">
+                    @Html.LabelFor(model => model.LinkField, htmlAttributes: new { @class = "control-label" })
+                </div>
+                <div class="col-md-10 col-lg-10">
+                    @Html.EditorFor(model => model.LinkField, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LinkField, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2 col-lg-2">
+                    @Html.LabelFor(model => model.AudienceField, htmlAttributes: new { @class = "control-label" })
+                </div>
+                <div class="col-md-10 col-lg-10">
+                    @Html.EditorFor(model => model.AudienceField, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AudienceField, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">                
+                <div class="col-lg-10 col-md-10"></div>
+                <div class="col-md-2 col-lg-2">
+                    <div class="pull-right">
+                        <button class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        Selected list here
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <label class="control-label">Explicitly Add or Remove events</label>
+    </div>
+</div>
+
+<div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control">
+                    <option>Furst</option>
+                    <option>Sekund</option>
+                    <option>Thurdt</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control">
+                    <option>Furst</option>
+                    <option>Sekund</option>
+                    <option>Thurdt</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control">
+                    <option>Furst</option>
+                    <option>Sekund</option>
+                    <option>Thurdt</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control">
+                    <option>Furst</option>
+                    <option>Sekund</option>
+                    <option>Thurdt</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-lg-5">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <input class="form-control" />
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control">
+                    <option>Furst</option>
+                    <option>Sekund</option>
+                    <option>Thurdt</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

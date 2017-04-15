@@ -1,0 +1,940 @@
+﻿
+
+@{
+    ViewBag.Title = "Manage Documents";
+    Layout = "_ManageLayout.cshtml";
+}
+
+@model Drupal.ParentPortal.Models.DocumentsViewModel
+
+<script>
+    $('document').ready(function () {
+        $("#uploadSucceededAlert").on("click", fadeout("uploadSucceededAlert"));
+        $("#uploadFailedAlert").on("click", fadeout("uploadFailedAlert"));
+        $('#documentList').DataTable();
+
+        //var documentUploadSucceeded = GetURLParameter("documentUploadSucceeded");
+        //var failMsg = GetURLParameter("failMsg");
+
+        //if (documentUploadSucceeded == "true") {
+            
+        //    alert("file saved successfully.");
+        //}
+        //if (documentUploadSucceeded == "false") {
+            
+        //}
+
+        $('[data-toggle="tooltip"]').tooltip();
+
+        
+
+        InitModals();
+    });
+
+    
+
+    function InitModals() {
+        $('#NewLibrarybutton').click(function () {
+            $('#newLibraryModal').modal('show');
+        });
+        $('#newLibraryModal').on('shown.bs.modal', function () {
+            $('#NewSPDocumentLibrary_SiteUrl').get(0).focus();
+        });
+
+        $('#NewFileButton').click(function () {
+            $('#newFileUploadModal').modal('show');
+        });
+
+        $('#EditLibrarybutton').click(function () {
+            $('#editLibraryModal').modal('show');
+        });
+        $('#editLibraryModal').on('shown.bs.modal', function () {
+            $('#EditSPDocumentLibrary_SiteUrl').get(0).focus();
+        });
+    }
+
+    function EditLibrary(id, siteUrl, userName, pass, audienceId, name) {
+        document.getElementById("frmUpdateDocumentLibrary").reset();
+        $('#editLibraryModal').modal('show');
+        $('#EditSPDocumentLibrary_SiteUrl').val(siteUrl);
+        $('#EditSPDocumentLibrary_SiteUrl').focus();
+        $('#EditSPDocumentLibrary_Username').val(userName);
+        $('#EditSPDocumentLibrary_Password').val(pass);
+        if (audienceId) {
+            $('#EditSPDocumentLibrary_AudienceId').val(audienceId);
+        }
+        $('#EditSPDocumentLibrary_DocumentLibraryId').val(id);
+        $('#EditSPDocumentLibrary_LibraryName').val(name);
+        $('#removeLibraryName').html(name);
+    }
+
+    function RemoveLibrary() {
+        var id = $('#proceedBtn').data('id');
+        $('#proceedBtn').button('loading');
+        var json = { documentlibraryid: id };
+        $.ajax({
+            type: "POST",
+            url: "/manage/RemoveDocumentLibrary",
+            data: json,
+            accept: "text/html",
+            success: function (result) {
+                
+                console.log("success");
+                if (result.Success) {
+                    // remove the row with that document library in it
+                    $("#documentlibraryid" + result.DocumentLibraryId).remove();
+                    console.log("SP Doc Lib Removed.");
+                    $('#confirm-delete-lib').modal('hide');
+                    $('#proceedBtn').data('id', "");
+                    $('#proceedBtn').button('reset');
+                    //window.location = window.location.pathname;//location.reload(); // TODO: more elegant solution needed here, but for now, reload window for now after save to pull new list of documents
+                } else {
+                    
+                    console.log("Error removing sp doc lib.");
+                    $("#deleteDocLibFailMsg").html(result.message);
+                    $('#proceedBtn').button('reset');
+                    $("#deleteDocLibFail").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error removing sp doc lib. Error: " + error);
+                $("#deleteDocLibFailMsg").html(error);
+                $('#proceedBtn').button('reset');
+                $("#deleteDocLibFail").show();
+            }
+        }).then(function (result) {
+            console.log("Successfully completed ajax call 2");
+            
+        });
+    }
+
+    function SyncLibrary() {
+        var id = $('#proceedBtnSync').data('id');
+        $('#proceedBtnSync').button('loading');
+        var json = { documentlibraryid: id };
+        $.ajax({
+            type: "POST",
+            url: "/manage/SyncDocumentLibrary",
+            data: json,
+            accept: "text/html",
+            success: function (result) {
+                
+                console.log("success");
+                if (result.Success) {
+                    console.log("SP Doc Lib Synced.");
+                    $('#confirm-sync-lib').modal('hide');
+                    $('#proceedBtnSync').data('id', "");
+                    $('#proceedBtnSync').button('reset');
+                    window.location = window.location.pathname;//location.reload(); // TODO: more elegant solution needed here, but for now, reload window for now after save to pull a new list of documents
+                } else {
+                    
+                    console.log("Error syncing sp doc lib.");
+                    $('#proceedBtnSync').button('reset');
+                    $("#syncDocLibFailMsg").html(result.message);
+                    $("#syncDocLibFail").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error syncing sp doc lib. Error: " + error);
+                $("#syncDocLibFailMsg").html(error);
+                $("#syncDocLibFail").show();
+                $('#proceedBtnSync').button('reset');
+            }
+        }).then(function (result) {
+            console.log("Successfully completed ajax call 3");
+            
+        });
+    }
+
+    function RemoveFile() {
+        var id = $('#proceedBtnFileDelete').data('id');
+        $('#proceedBtnFileDelete').button('loading');
+        var json = { documentid: id };
+        $.ajax({
+            type: "POST",
+            url: "/manage/RemoveFile",
+            data: json,
+            accept: "text/html",
+            success: function (result) {
+                
+                console.log("success");
+                if (result.Success) {
+                    console.log("File Removed.");
+                    $('#confirm-delete-file').modal('hide');
+                    $('#proceedBtnFileDelete').data('id', "");
+                    $('#proceedBtnFileDelete').button('reset');
+                    window.location = window.location.pathname; // TODO: more elegant solution needed here, but for now, reload window for now after save to pull new list of documents
+                } else {
+                    
+                    console.log("Error removing sp doc lib.");
+                    $("#deleteFileFailMsg").html(result.message);
+                    $('#proceedBtnFileDelete').button('reset');
+                    $("#deleteFileFail").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error removing sp doc lib. Error: " + error);
+                $("#deleteFileFailMsg").html(error);
+                $('#proceedBtnFileDelete').button('reset');
+                $("#deleteFileFail").show();
+            }
+        }).then(function (result) {
+            console.log("Successfully completed ajax call file removal");
+            
+        });
+    }
+
+    function ConfirmDeleteLibrary(id, name) {
+        $('#proceedBtn').data('id', id);
+        $('#syncLibraryName').html(name);
+        $('#confirm-delete-lib').modal('show');
+    }
+
+    function ConfirmDeleteFile(id, name) {
+        $('#proceedBtnFileDelete').data('id', id);
+        $('#removeFileName').html(name);
+        $('#confirm-delete-file').modal('show');
+    }
+
+    function CancelDeleteFile() {
+        $('#confirm-delete-file').modal('hide');
+        $('#proceedBtnFileDelete').data('id', "");
+    }
+
+    
+
+    function ConfirmSyncLibrary(id, name) {
+        $('#proceedBtnSync').data('id', id);
+        $('#removeLibraryName').html(name);
+        $('#confirm-sync-lib').modal('show');
+    }
+
+    function CancelSyncLib() {
+        $('#confirm-sync-lib').modal('hide');
+        $('#proceedBtn').data('id', "");
+        $('#proceedBtn').button('reset');
+        $("#syncDocLibFail").hide();
+    }
+
+    function CancelDeleteLib() {
+        $('#confirm-delete-lib').modal('hide');
+        $('#proceedBtn').data('id', "");
+        $('#proceedBtn').button('reset');
+        $("#syncDocLibFail").show();
+    }
+
+    function GetURLParameter(sParam) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return decodeURIComponent(sParameterName[1]);
+            }
+        }
+    }
+
+    // Create new doc lib JS
+    function SaveDocLibSucceeded(data) {
+        if (data.Success) {
+            $("#btnSaveNewLibrary").button('reset');
+            $('#newLibraryModal').modal('hide');
+            window.location = window.location.pathname;//location.reload(); // TODO: more elegant solution needed here, but for now, reload window for now after save to pull new libraries
+        }
+        else {
+            $("#docLibFailMsg").html(data.message);
+            $("#btnSaveNewLibrary").button('reset');
+            $("#newDocLibFail").show();
+        }
+    }
+
+    function SaveDocLibFailed(msg) {
+        $("#btnSaveNewLibrary").button('reset');
+        $("#failMsg2").html(msg);
+        $("#docLibFailMsg").html(result.message);
+        $("#newDocLibFail").show();
+        //$("#saveFailedAlert2").alert();
+        //$("#saveFailedAlert2").fadeTo(4000, 500).slideUp(500, function () {
+        //    $("#saveFailedAlert2").slideUp(500);
+        //});
+    }
+
+    // Edit doc lib JS
+    function UpdateDocLibSucceeded(data) {
+        
+        console.log("AJAX UpdateDocumentLibrary save completed.");
+        if (data.Success) {
+            $('#editLibraryModal').modal('hide');
+            window.location = window.location.pathname;//location.reload(); // TODO: more elegant solution needed here, but for now, reload window for now after save to pull new libraries
+        }
+        else {
+            $("#editDocLibFailMsg").html(data.message);
+            $("#editDocLibFail").show();
+            
+            console.log("AJAX UpdateDocumentLibrary save completed, but failed. " + data.message);
+        }
+    }
+
+    function UpdateDocLibFailed(data) {
+        $("#btnSave4").button('reset');
+        $("#failMsg3").html(data.message);
+        $("#editDocLibFailMsg").html(data.message);
+        $("#editDocLibFail").show();
+    }
+    // End Edit doc lib JS
+
+    // Edit doc lib JS
+    function UpdateDocFileSucceeded(data) {
+        
+        console.log("AJAX UpdateDocument save completed.");
+        if (data.Success) {
+            $('#editDocumentModal').modal('hide');
+            document.getElementById("frmUpdateDocument").reset();
+            window.location = window.location.pathname;//location.reload(); // TODO: more elegant solution needed here, but for now, reload window for now after save to pull new libraries
+        }
+        else {
+            $("#editDocFailMsg").html(data.message);
+            $("#editDocFail").show();
+            
+            console.log("AJAX UpdateDocument save completed, but failed. " + data.message);
+        }
+    }
+
+    function UpdateDocFileFailed(data) {
+        $("#btnSave5").button('reset');
+        $("#failMsg5").html(data.message);
+        $("#editDocFailMsg").html(data.message);
+        $("#editDocFail").show();
+    }
+
+    function EditFile(id, name, audienceId) {
+        document.getElementById("frmUpdateDocument").reset();
+        $('#EditDocument_Name').val(name);
+        $('#EditDocument_Name').focus();
+        if (audienceId) {
+            $('#EditDocument_AudienceId').val(audienceId);
+        }
+        $('#EditDocument_DocumentId').val(id);
+        $('#editFileModal').modal('show');
+    }
+    // End Edit doc lib JS
+
+    function UploadSucceeded(data) {
+        if (data.success) {
+            $("#btnSave4").button('reset');
+            $("#uploadSucceededAlert").alert();
+            $("#uploadSucceededAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#uploadSucceededAlert").slideUp(500);
+            });
+        } else
+        {
+            $("#btnSave4").button('reset');
+            $("#uploadFailedAlert").show();
+            $("#uploadFailedAlert").alert();
+            $("#uploadFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#uploadFailedAlert").slideUp(500);
+            });
+        }
+    }
+    function UploadFailed(data) {
+        if (!data.success) {
+            $("#btnSave4").button('reset');
+            $("#saveFailedAlert").alert();
+            $("#saveFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveFailedAlert").slideUp(500);
+            });
+        }
+
+    }
+    function fadeout(elementid) {
+        $("#" + elementid).fadeTo(4000, 500).slideUp(500, function () { $("#" + elementid).slideUp(500); });
+    }
+</script>
+<div id="myStudentsTable">
+    @{ Html.RenderPartial("_DocumentsAzureBlobSettings", Model.Settings); }
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <h3>SharePoint Libraries</h3>
+    </div>
+</div>
+
+<table id="spLibraryList" class="table table-striped table-bordered" cellspacing="0" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>Actions</th>
+            <th>Site URL</th>
+            <th>Library Name</th>
+            <th>Audience</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            foreach (var l in Model.SPDocumentLibraries)
+            {
+                <tr id="@("documentlibraryid" + l.DocumentLibraryId)">
+                    <td>
+                        <button class="btn btn-default RemoveLibraryButton" onclick='ConfirmDeleteLibrary("@l.DocumentLibraryId", "@l.SiteUrl" + " - " + "@l.LibraryName")' data-toggle="tooltip" title="Delete Library"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                        <button class="btn btn-default" onclick='EditLibrary("@l.DocumentLibraryId", "@l.SiteUrl", "@l.Username", "@l.Password", "@l.AudienceId", "@l.LibraryName")' data-toggle="tooltip" title="Edit Library Settings"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                        <button class="btn btn-default" onclick='ConfirmSyncLibrary("@l.DocumentLibraryId", "@l.SiteUrl" + " - " + "@l.LibraryName")' data-toggle="tooltip" title="Sync Library"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </td>
+                    <td>
+                        @l.SiteUrl
+                    </td>
+                    <td>
+                        @l.LibraryName
+                    </td>
+                    <td> 
+                        @{if (l.Audience != null) {  @l.Audience.AudienceName } }
+                    </td>
+                </tr>
+                            }
+        }
+
+    </tbody>
+</table>
+
+
+<!-- Modal Dialog - New SP Library -->
+<div class="modal fade" id="newLibraryModal" tabindex="-1" role="dialog" aria-labelledby="SPLibModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("SaveDocumentLibrary", "Manage", new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                Url = Url.Action("SaveDocumentLibrary", "Manage"),
+                OnSuccess = "SaveDocLibSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#newStudentModal', '#btnSave')",
+                OnFailure = "SaveDocLibFailed(data)",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+                OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSaveNewLibrary')"
+            }, new { id = "frmSaveDocumentLibrary" }))
+            {
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="SPLibModalLabel">SharePoint Library Information </h4>
+            </div>
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row ">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="">
+                                @Html.LabelFor(model => model.NewSPDocumentLibrary.SiteUrl, htmlAttributes: new { @class = "control-label col-md-3" })
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                @Html.EditorFor(model => model.NewSPDocumentLibrary.SiteUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NewSPDocumentLibrary.SiteUrl, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                @Html.LabelFor(model => model.NewSPDocumentLibrary.Username, htmlAttributes: new { @class = "control-label col-md-3" })
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                @Html.EditorFor(model => model.NewSPDocumentLibrary.Username, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NewSPDocumentLibrary.Username, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                @Html.LabelFor(model => model.NewSPDocumentLibrary.Password, htmlAttributes: new { @class = "control-label col-md-3" })
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                @Html.EditorFor(model => model.NewSPDocumentLibrary.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NewSPDocumentLibrary.Password, "", new { @class = "text-danger" })
+                            </div>
+                            </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                @Html.LabelFor(model => model.NewSPDocumentLibrary.LibraryName, htmlAttributes: new { @class = "control-label col-md-4" })
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                @Html.EditorFor(model => model.NewSPDocumentLibrary.LibraryName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NewSPDocumentLibrary.LibraryName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="">
+                                @Html.LabelFor(model => model.NewSPDocumentLibrary.Audience.AudienceName, htmlAttributes: new { @class = "control-label col-md-3" })
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                @Html.DropDownListFor(model => model.NewSPDocumentLibrary.AudienceId, new SelectList(Model.Audiences, "AudienceId", "AudienceName"), "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.NewSPDocumentLibrary.Audience.AudienceName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div id="newDocLibFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="docLibFailMsg"></div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <!--<input type="submit" value="Save" class="btn btn-default" />-->
+                            <button type="submit" class="btn btn-primary btn-ok" id="btnSaveNewLibrary" onclick="$(this).button('loading');" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+
+                        </div>
+                    </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+ <!-- Modal Dialog - Confirm Remove SP Document Library -->
+<div class="modal fade" id="confirm-delete-lib" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top:40%;outline: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="CancelDeleteLib();" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="myModalLabel">Remove <span id="syncLibraryName"></span>?</h5>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone.  All files previously synchronized from this library will also be removed.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-ok" onclick="RemoveLibrary();" id="proceedBtn" data-id="" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Deleting">Proceed</button>
+                <button type="button" class="btn btn-default" onclick="CancelDeleteLib();">Cancel</button>
+                <div id="deleteDocLibFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="deleteDocLibFailMsg"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <!-- Modal Dialog - Confirm Sync SP Document Library File -->
+<div class="modal fade" id="confirm-sync-lib" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top:40%;outline: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="CancelSyncLib();" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="myModalLabel">Sync <span id="removeLibraryName"></span>?</h5>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone.  All files previously synchronized from this library will be removed first.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-ok" onclick="SyncLibrary();" id="proceedBtnSync" data-id="" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Syncing">Proceed</button>
+                <button type="button" class="btn btn-default" onclick="CancelSyncLib();">Cancel</button>
+                <div id="syncDocLibFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="syncDocLibFailMsg"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Dialog - Edit Existing SP Library -->
+<div class="modal fade" id="editLibraryModal" tabindex="-1" role="dialog" aria-labelledby="SPLibModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("UpdateDocumentLibrary", "Manage", new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                Url = Url.Action("UpdateDocumentLibrary", "Manage"),
+                OnSuccess = "UpdateDocLibSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#newStudentModal', '#btnSave')",
+                OnFailure = "UpdateDocLibFailed(data)",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+                OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSave4')"
+            }, new { id = "frmUpdateDocumentLibrary" }))
+            {
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="SPLibModalLabel">Edit SharePoint Library Information</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditSPDocumentLibrary.SiteUrl, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.EditorFor(model => model.EditSPDocumentLibrary.SiteUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EditSPDocumentLibrary.SiteUrl, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.EditSPDocumentLibrary.DocumentLibraryId)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditSPDocumentLibrary.Username, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.EditorFor(model => model.EditSPDocumentLibrary.Username, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EditSPDocumentLibrary.Username, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditSPDocumentLibrary.Password, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.EditorFor(model => model.EditSPDocumentLibrary.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EditSPDocumentLibrary.Password, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditSPDocumentLibrary.LibraryName, htmlAttributes: new { @class = "control-label col-md-4" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.EditorFor(model => model.EditSPDocumentLibrary.LibraryName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EditSPDocumentLibrary.LibraryName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditSPDocumentLibrary.Audience.AudienceName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.DropDownListFor(model => model.EditSPDocumentLibrary.AudienceId, new SelectList(Model.Audiences, "AudienceId", "AudienceName"), "", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EditSPDocumentLibrary.Audience.AudienceName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-primary btn-ok pull-right" id="btnSave4" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+
+                        </div>
+                    </div>
+                    <div id="editDocLibFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="editDocLibFailMsg"></div></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+    
+<button value="" class="btn btn-default" id="NewLibrarybutton"><span class="glyphicon glyphicon-plus"></span> Add Document Library</button>
+
+
+<!-- END SharePoint Online -->
+
+<div class="row">
+    <div class="col-lg-12">
+        &nbsp;
+    </div>
+</div>
+
+
+<!-- Show all Documents saved in Azure Blob storage-->
+<div class="row">
+    <div class="col-lg-12">
+        <hr />
+        <h3>All Documents</h3>
+    </div>
+</div>
+@if (Model.DocumentUploadSucceeded == true)
+{
+    <div class="alert alert-success alert-dismissible" role="alert" id="uploadSucceededAlert" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+        <button type="button" class="close" onclick="javascript: $('#uploadSucceededAlert').hide()" onload='javascript: fadeout("uploadSucceededAlert");' aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Upload Succeeded!</strong>
+    </div>
+}
+else if (Model.DocumentUploadSucceeded == false)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert" id="uploadFailedAlert" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+        <button type="button" class="close" onclick="javascript: $('#uploadFailedAlert').hide()" onload='javascript: fadeout("uploadFailedAlert");' aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Upload Failed!</strong> Please select a different document and try again.
+    </div>
+}
+<!-- Document list table -->
+<table id="documentList" class="table table-striped table-bordered" cellspacing="0" sstyle="width: 100%;">
+    <thead>
+        <tr>
+            <th>Actions</th>
+            <th>Document Name</th>
+            <th>Audience</th>
+            <th>SP Document Library</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    @{
+        foreach (var d in Model.Documents)
+        {
+            <tr>
+                <td>
+                    <button class="btn btn-default" onclick='ConfirmDeleteFile("@d.DocumentId", "@d.Name")' data-toggle="tooltip" title="Delete Document"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    <button class="btn btn-default" onclick='EditFile("@d.DocumentId", "@d.Name", "@{if (d.Audience != null) {@d.Audience.AudienceId; }}")' data-toggle="tooltip" title="Edit Document Information"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                </td>
+                <td>
+                    <a href="Download?documentid=@d.DocumentId" class="document-listing-href"> @Html.Raw(d.Name) </a>
+                </td>
+                <td>
+                    @{ if (d.Audience != null)
+                        { @d.Audience.AudienceName }
+                    }
+                </td>
+                <td>
+                    @{ if (d.DocumentLibrary != null) { @d.DocumentLibrary.LibraryName }
+                    }
+                </td>
+            </tr>
+         }
+    }
+        
+    </tbody>
+</table>
+
+<!-- Modal Dialog - Confirm Delete Document -->
+<div class="modal fade" id="confirm-delete-file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top:40%;outline: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="CancelDeleteFile();" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="myModalLabel">Remove <span id="removeFileName"></span>?</h5>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone.  This file will be permanently removed.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-ok" onclick="RemoveFile();" id="proceedBtnFileDelete" data-id="" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Deleting">Proceed</button>
+                <button type="button" class="btn btn-default" onclick="CancelDeleteFile();">Cancel</button>
+                <div id="deleteFileFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="deleteFileFailMsg"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Dialog - Edit Existing File -->
+<div class="modal fade" id="editFileModal" tabindex="-1" role="dialog" aria-labelledby="SPFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("UpdateDocument", "Manage", new AjaxOptions()
+            {
+                HttpMethod = "POST",
+                Url = Url.Action("UpdateDocument", "Manage"),
+                OnSuccess = "UpdateDocFileSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#newStudentModal', '#btnSave')",
+                OnFailure = "UpdateDocFileFailed(data)",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+                OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSave5')"
+            }, new { id = "frmUpdateDocument" }))
+            {
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="SPFileModalLabel">Edit Document Information</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditDocument.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.EditorFor(model => model.EditDocument.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EditDocument.Name, "", new { @class = "text-danger" })
+                                    @Html.HiddenFor(model => model.EditDocument.DocumentId)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="">
+                                    @Html.LabelFor(model => model.EditDocument.Audience.AudienceName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                </div>
+                                <div class="col-md-10 col-lg-10">
+                                    @Html.DropDownListFor(model => model.EditDocument.AudienceId, new SelectList(Model.Audiences, "AudienceId", "AudienceName"), "", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EditDocument.Audience.AudienceName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <!--<input type="submit" value="Save" class="btn btn-default" />-->
+                            <button type="submit" class="btn btn-primary btn-ok pull-right" id="btnSave5" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+
+                        </div>
+                    </div>
+                    <div id="editDocFail" hidden="hidden" class="alert alert-danger"><strong>Failed!</strong> Your changes were not saved. <div id="editDocFailMsg"></div></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialog - New File Upload -->
+<div class="modal fade" id="newFileUploadModal" tabindex="-1" role="dialog" aria-labelledby="SPFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("UploadDocument", "Manage", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmID2"
+                                    }))
+            {
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="SPFileModalLabel">Upload File Manually</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="row ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        <label class="control-label" for="file">Choose File</label>
+                                    </div>
+                                    <div class="col-md-9 col-lg-9">
+
+                                        @*<input class="fa-file" type="file" id="file" name="file" />*@
+                                        <div class="input-group">
+                                            <label class="input-group-btn">
+                                                <span class="btn btn-primary">
+                                                    Browse&hellip; <input type="file" style="display: none;"  id="file" name="file">
+                                                </span>
+                                            </label>
+                                            <input type="text" class="form-control" readonly>
+                                        </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        @Html.LabelFor(model => model.NewDocument.Audience.AudienceName, htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-9 col-lg-9">
+                                        @Html.DropDownListFor(model => model.NewDocument.AudienceId, new SelectList(Model.Audiences, "AudienceId", "AudienceName"), "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.NewDocument.Audience.AudienceName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="col-md-10">
+                        </div>
+                        <div class="col-md-2">
+                            <!--<input type="submit" value="Save" class="btn btn-default" />-->
+                            <button type="submit" class="btn btn-primary btn-ok pull-right" id="btnSave4" onclick="$(this).button('loading')" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Uploading">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<button value="" class="btn btn-default" id="NewFileButton"><span class="glyphicon glyphicon-plus"></span> Add Document</button>
+
+<script language="JavaScript" type="text/javascript">
+
+    $(function () {
+
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+
+    });
+</script>
+
+<script>
+
+    // Validate file extensions - ensure the file has an extension and that it is an allowed type
+    (function ($) {
+        $.fn.checkFileType = function (options) {
+            var defaults = {
+                allowedExtensions: [],
+                success: function () { },
+                error: function () { }
+            };
+            options = $.extend(defaults, options);
+
+            return this.each(function () {
+
+                $(this).on('change', function () {
+                    var value = $(this).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+
+                    if ($.inArray(extension, options.allowedExtensions) == -1) {
+                        options.error();
+                        $(this).focus();
+                    } else {
+                        options.success();
+
+                    }
+
+                });
+
+            });
+        };
+
+    })(jQuery);
+
+    $(function () {
+        $('#file').checkFileType({
+            allowedExtensions: ['bmp', 'cpt', 'css', 'doc', 'docx', 'dotx', 'docm', 'dotm', 'dtd', 'dv', 'dvi', 'eps', 'gif', 'htm', 'html', 'ico', 'ics', 'efb', 'jp2', 'jpe', 'jpeg', 'jpg', 'js', 'm4a', 'm4p', 'm4v', 'mac', 'mid', 'midi', 'mov', 'movie', 'mp2', 'mp3', 'mp4', 'mpe', 'mpeg', 'mpg', 'mpga', 'pdf', 'png', 'ppm', 'ppt', 'pptx', 'potx', 'ppsz', 'ppam', 'pptm', 'ppsm', 'ps', 'qt', 'qti', 'qtif', 'rgb', 'rtf', 'rtx', 'svg', 'tif', 'tiff', 'txt', 'vrml', 'vxml', 'wav', 'wbmp', 'vbmxl', 'wml', 'wmls', 'xbm', 'xht', 'xhtml', 'xls', 'xml', 'xpm', 'xsl', 'xlsx', 'xltx', 'xlsm', 'xltm', 'xlam', 'xlsb', 'xslt'],
+            success: function () {
+                return true;
+            },
+            error: function () {
+                alert('Invalid file type.  Allowed types: \n.bmp, .cpt, .css, .csv, .doc, .docx, .dotx, .docm, .dotm, .dtd, .dv, .dvi, .eps, .gif, .htm, .html, .ico, .ics, .efb, .jp2, .jpe, .jpeg, .jpg, .js, .m4a, .m4p, .m4v, .mac, .mid, .midi, .mov, .movie, .mp2, .mp3, .mp4, .mpe, .mpeg, .mpg, .mpga, .pdf, .png, .ppm, .ppt, .pptx, .potx, .ppsz, .ppam, .pptm, .ppsm, .ps, .qt, .qti, .qtif, .rgb, .rtf, .rtx, .svg, .tif, .tiff, .txt, .vrml, .vxml, .wav, .wbmp, .vbmxl, .wml, .wmls, .xbm, .xht, .xhtml, .xls, .xml, .xpm, .xsl, .xlsx, .xltx, .xlsm, .xltm, .xlam, .xlsb, .xslt');
+                return false;
+            }
+        });
+
+    });
+</script>

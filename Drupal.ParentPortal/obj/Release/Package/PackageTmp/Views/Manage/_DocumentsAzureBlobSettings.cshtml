@@ -1,0 +1,101 @@
+﻿@model Drupal.ParentPortal.Models.DocumentSettingsViewModel
+
+@using (Ajax.BeginForm("SaveDocumentSettings", "Manage", new AjaxOptions()
+{
+    HttpMethod = "POST",
+    Url = Url.Action("SaveDocumentSettings", "Manage"),
+    OnSuccess = "SaveSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#eventDetailsModal', '#btnSave')",
+    OnFailure = "SaveFailed()",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+    OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSave')",
+    OnComplete = "AjaxAlerts.onComplete"
+}))
+{
+    @Html.AntiForgeryToken()<div class="panel panel-default">
+    <div class="modal-header panel-heading" data-toggle="collapse" data-target="#settings">
+        <h4 class="modal-title" id="eventDetailsModalLabel">Settings</h4>
+    </div>
+    <div class="panel-collapse collapse panel-body" id="settings">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-4">
+                <label class="control-label" for="ConnectionString_Value">Connection String</label>
+            </div>
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.ConnectionString.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConnectionString.Value, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ConnectionString.ConfigurationItemId)
+                @Html.HiddenFor(model => model.ConnectionString.Module)
+                @Html.HiddenFor(model => model.ConnectionString.Key)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="control-label" for="ConnectionString_Value">Account Name</label>
+            </div>
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.AccountName.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AccountName.Value, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.AccountName.ConfigurationItemId)
+                @Html.HiddenFor(model => model.AccountName.Module)
+                @Html.HiddenFor(model => model.AccountName.Key)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="control-label" for="ConnectionString_Value">Access Key</label>
+            </div>
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.AccessKey.Value, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.AccessKey.Value, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.AccessKey.ConfigurationItemId)
+                @Html.HiddenFor(model => model.AccessKey.Module)
+                @Html.HiddenFor(model => model.AccessKey.Key)
+            </div>
+        </div>
+        <br />
+        <div class="">
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="alert alert-success alert-dismissible pull-right" role="alert" id="saveSucceededAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <button type="button" class="close" onclick="javascript:$('#saveSucceededAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>Success!</strong> You successfully saved the Documents module settings.
+                    </div>
+                    <div class="alert alert-danger alert-dismissible pull-right" role="alert" id="saveFailedAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <button type="button" class="close" onclick="javascript:$('#saveFailedAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>Failed!</strong> Your changes were not saved. Please try again.
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-ok pull-right" id="btnSave" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+}
+<script type="text/javascript">
+    function SaveSucceeded(data) {
+        if (data.success) {
+            $("#btnSave").button('reset');
+            $("#saveSucceededAlert").alert();
+            $("#saveSucceededAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveSucceededAlert").slideUp(500);
+            });
+        }
+    }
+    function SaveFailed(data) {
+        if (!data.success) {
+            $("#btnSave").button('reset');
+            $("#saveFailedAlert").alert();
+            $("#saveFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveFailedAlert").slideUp(500);
+            });
+        }
+
+    }
+</script>

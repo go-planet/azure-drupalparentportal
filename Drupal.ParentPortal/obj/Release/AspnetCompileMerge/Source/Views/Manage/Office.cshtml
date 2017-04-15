@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Office";
+    Layout = "~/Views/Manage/_ManageLayout.cshtml";
+}
+
+@model Drupal.ParentPortal.Models.OfficeViewModel
+
+<div class="form-horizontal" id="OfficeForm">
+
+    @using (Ajax.BeginForm("SaveOffice", "Manage", new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        Url = Url.Action("SaveOffice", "Manage"),
+        OnSuccess = "SaveSucceeded(data)",//"AjaxAlerts.onSuccess(data, '', '#eventDetailsModal', '#btnSave')",
+        OnFailure = "SaveFailed(data)",//"AjaxAlerts.onFailure(xhr, status, error, '#btnSave')",
+        OnBegin = "AjaxAlerts.onBegin(xhr, '#btnSave')",
+        OnComplete = "AjaxAlerts.onComplete"
+    }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="control-label col-md-3" for="ConfigItem_Value">URL</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ConfigItem.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ConfigItem.Value, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ConfigItem.Module)
+                @Html.HiddenFor(model => model.ConfigItem.Key)
+                @Html.HiddenFor(model => model.ConfigItem.ConfigurationItemId)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-9">
+                <div class="alert alert-success alert-dismissible pull-right" role="alert" id="saveSucceededAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                    <button type="button" class="close" onclick="javascript:$('#saveSucceededAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Success!</strong> You successfully saved the settings.
+                </div>
+                <div class="alert alert-danger alert-dismissible pull-right" role="alert" id="saveFailedAlert" hidden="hidden" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                    <button type="button" class="close" onclick="javascript:$('#saveFailedAlert').hide()" aria-label="Close" style="height: 30px;line-height:30px;margin-bottom: 1px;padding:0px 15px;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Failed!</strong> Your changes were not saved. Please try again.
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="text-align:left; ">
+            <div class="col-md-9" style="text-align:left">
+                <button type="submit" class="btn btn-primary btn-ok pull-right" id="btnSave" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving">Save</button>
+            </div>
+        </div>
+        
+        <!-- Modal Dialog -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="alert-success" aria-hidden="true">
+
+        </div>
+    }
+</div>
+
+<script>
+            
+    //function SaveSucceeded() {
+    //    //alert("URL Saved.");
+    //    $("#modaltext").html("URL saved successfully.");
+    //    $('#confirm-delete').modal('show');
+    //    alert("save succeeded.")
+    //}
+    //function SaveFailed() {
+    //    $("#modaltext").html("URL did not save.");
+    //    $('#confirm-delete').modal('show');
+    //}
+
+    function SaveSucceeded(data) {
+        if (data.success) {
+            $("#btnSave").button('reset');
+            $("#saveSucceededAlert").alert();
+            $("#saveSucceededAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveSucceededAlert").slideUp(500);
+            });
+        }
+    }
+    function SaveFailed(data) {
+        if (!data.success) {
+            $("#btnSave").button('reset');
+            $("#saveFailedAlert").alert();
+            $("#saveFailedAlert").fadeTo(4000, 500).slideUp(500, function () {
+                $("#saveFailedAlert").slideUp(500);
+            });
+        }
+
+    }
+</script>

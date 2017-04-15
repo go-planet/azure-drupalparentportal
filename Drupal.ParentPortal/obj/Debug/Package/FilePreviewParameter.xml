@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="DrupalTest20161118091853" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="" value="Server=tcp:h39s4sh179.database.windows.net,1433;Database=drupaltest;User ID=inoagsearchappdbuser@h39s4sh179;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;Password=@nt!!l3$Alpha3" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="AD_APPIDUri" description="" value="https://planetdemolaboutlook.onmicrosoft.com/WebApp-drupaltest20161118091853.azurewebsites.net" tags="" />
+  <parameter name="AD_ClientID" description="" value="a9fbde52-0df1-4da2-84de-704a56dd93f2" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:ClientId']/@value" />
+  </parameter>
+  <parameter name="AD_MetadataUrl" description="" value="https://login.windows.net/planetdemolaboutlook.onmicrosoft.com/FederationMetadata/2007-06/FederationMetadata.xml" tags="" />
+  <parameter name="AD_ClientPassword" description="" value="YspjLoPniApTCiedjhQnF/zhKUijIKxzd1btKsiY7Js=" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:ClientSecret']/@value" />
+  </parameter>
+  <parameter name="AD_RealmAppSetting" description="" value="https://planetdemolaboutlook.onmicrosoft.com/WebApp-drupaltest20161118091853.azurewebsites.net" tags="" />
+  <parameter name="AD_AudienceUriAppSetting" description="" value="https://planetdemolaboutlook.onmicrosoft.com/WebApp-drupaltest20161118091853.azurewebsites.net" tags="" />
+  <parameter name="AD_TenantId" description="" value="9e0a5048-6d85-4462-a200-9a7451d5d541" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:TenantId']/@value" />
+  </parameter>
+  <parameter name="AD_Domain" description="" value="planetdemolaboutlook.onmicrosoft.com" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:Domain']/@value" />
+  </parameter>
+  <parameter name="AD_PostLogoutRedirectUri" description="" value="https://drupaltest20161118091853.azurewebsites.net/" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Debug\\Package\\PackageTmp\\Web\.config$" match="/configuration/appSettings/add[@key='ida:PostLogoutRedirectUri']/@value" />
+  </parameter>
+</parameters>

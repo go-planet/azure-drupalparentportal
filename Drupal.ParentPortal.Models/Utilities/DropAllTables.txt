@@ -1,0 +1,9 @@
+﻿drop table dbo.Student
+drop table dbo.EventVolunteer
+drop table dbo.SchoolEvent
+drop table dbo.Document
+drop table dbo.DocumentLibrary
+drop table dbo.ConfigurationItem
+drop table dbo.Audience
+drop table dbo.AppManagement
+drop table dbo.__MigrationHistory

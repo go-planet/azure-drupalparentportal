@@ -1,0 +1,25 @@
+﻿@{
+	Layout = "_ModuleLayout.cshtml";
+}
+
+@{      
+	ViewBag.Title = "Documents";
+	ViewBag.SettingsLink = Request.Url.GetLeftPart(UriPartial.Authority) + "/Manage/Documents";
+	ViewBag.Module = "DocumentsModule";
+}
+
+<!-- List Box -->
+<div id="docList" style="position: relative;">
+	<div class="loader" id="doclistloader" style="display:none;"></div>
+
+	<div id="document-listing">
+	</div>
+
+	<div class="document-pager">
+		<select id="document-pager-select">
+			<option value="0">Page 1</option>
+		</select>
+	</div>
+
+</div> 
+

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AD_APPIDUri" description="AD AppIDUri" defaultValue="APPIDUri" tags="ADrealmUri">
+    <parameterEntry kind="XmlFile" scope="C:\\DevRoot\\SLGE\\Microsoft\ -\ Drupal\ Parent\ Portal\\Current\\Drupal\.ParentPortal\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/system.identityModel/identityConfiguration/audienceUris/add[@value='APPIDUri']/@value" />
+  </parameter>
+</parameters>
