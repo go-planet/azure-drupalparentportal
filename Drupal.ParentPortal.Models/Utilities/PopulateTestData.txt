@@ -14,9 +14,9 @@ INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value
 GO
 INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (2, N'Events', N'SmtpServer', N'smtp.sendgrid.net', 0)
 GO
-INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (3, N'Events', N'SmtpLoginUser', N'azure_a6adc1690ca604dcd5cfcf13cf82f3fc@azure.com', 0)
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (3, N'Events', N'SmtpLoginUser', N'', 0)
 GO
-INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (4, N'Events', N'SmtpLoginPassword', N'DBsA2cEyBGfu15F', 0)
+INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (4, N'Events', N'SmtpLoginPassword', N'', 0)
 GO
 INSERT [dbo].[ConfigurationItem] ([ConfigurationItemId], [Module], [Key], [Value], [Required]) VALUES (5, N'Events', N'SendFromEmailAddress', N'sharepoint@planetdemolab.com', 0)
 GO
